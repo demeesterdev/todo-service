@@ -1,0 +1,80 @@
+@hostname = localhost
+@port = 8082
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+@username1=hanshandjes
+@username2=peterpootjes
+@newUsername=vascovoetjes
+@password=owwyeah
+@newPassword=welkom123
+
+###
+GET http://{{host}}/status
+
+###
+GET http://{{host}}/
+
+### 
+# @name createUser1
+POST http://{{host}}
+content-type: {{contentType}}
+
+{
+    "username": "{{username1}}",
+    "password": "{{password}}"
+}
+
+### 
+# @name createUser2
+POST http://{{host}}
+content-type: {{contentType}}
+
+{
+    "username": "{{username2}}",
+    "password": "{{password}}"
+}
+
+###
+
+POST http://{{host}}/login
+content-type: {{contentType}}
+
+{
+    "username": "{{username1}}",
+    "password": "{{password}}"
+}
+
+###
+
+POST http://{{host}}/login
+content-type: {{contentType}}
+
+{
+    "username": "{{username1}}",
+    "password": "invalid-password-{{$guid}}"
+}
+
+###
+
+@userId = {{createUser1.response.body.$.user.id}}
+GET http://{{host}}/{{userId}}
+
+### 
+PUT http://{{host}}/{{userId}}
+content-type: {{contentType}}
+
+{
+    "username": "{{newUsername}}"
+}
+
+### 
+PUT http://{{host}}/{{userId}}
+content-type: {{contentType}}
+
+{
+    "password": "{{newPassword}}"
+}
+
+###
+GET http://{{host}}/{{username2}}

@@ -1,0 +1,49 @@
+@hostname = localhost
+@port = 8081
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+@user1=00e8ddf3-c604-4fd8-a415-aaaaaa111111
+@user2=00e8ddf3-c604-4fd8-a415-aaaaaa222222
+
+### 
+# @name createTodoUser1
+POST http://{{host}}
+content-type: {{{{contentType}}}}
+
+{
+    "title": "Hello world the first",
+    "owner_id": "{{user1}}"
+}
+
+### 
+# @name user2todo
+POST http://{{host}}
+content-type: {{{{contentType}}}}
+
+{
+    "title": "Hello world the first",
+    "owner_id": "{{user2}}"
+}
+
+###
+GET http://localhost:8081/{{$guid}}
+
+###
+
+GET http://localhost:8081/?owner={{user1}}
+
+###
+
+@todoId = {{createTodoUser1.response.body.$.todo.id}}
+GET http://localhost:8081/{{todoId}}
+
+###
+
+@todoId = {{createTodoUser1.response.body.$.todo.id}}
+PUT http://localhost:8081/{{todoId}}
+content-type: application/json
+
+{
+    "title": "this is it"
+}
